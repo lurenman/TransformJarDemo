@@ -1,0 +1,33 @@
+apply plugin: 'groovy'
+
+dependencies {
+    //gradle sdk
+    implementation gradleApi()
+    //groovy sdk
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:4.1.1' //自带ASM7.0
+}
+
+group='cn.tongdun.android.plugin'
+version='1.0.0'
+
+def artifactId = 'ExcludeaarPlugin' //唯一标示
+
+// doLast 表示task在执行阶段执行
+task copyPluginFile {
+    doLast {
+        copy {
+            println("--- copy tongdun plugin file to plugin-libs")
+            from '../excludeaar-plugin/build/libs/'
+            into '../plugin-libs/'
+            //rename 'excludeaar'+ "-" + version + '.jar', artifactId + "-" + version + '.jar'
+        }
+    }
+}
+//在执行assemble、build或jar之后执行copyPluginFile
+assemble.finalizedBy(copyPluginFile)
+build.finalizedBy(copyPluginFile)
+jar.finalizedBy(copyPluginFile)
+
+
+
